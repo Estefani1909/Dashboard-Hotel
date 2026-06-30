@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe Ejecutivo Hotelero</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--azul-oscuro:#0B3C5D;--azul:#1E88E5;--azul-claro:#90CAF9;--celeste:#06B6D4;--fondo:#EEF2F7;--tarjeta:#fff;--texto:#1F2937;--gris:#E5E7EB;--verde:#16A34A;--rojo:#E53935;--sombra:0 8px 24px rgba(15,23,42,.12)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif}
+body{background:var(--fondo);color:var(--texto)}
+body.dark{--fondo:#0F172A;--tarjeta:#1E293B;--texto:#F8FAFC;--gris:#334155;--sombra:0 8px 24px rgba(0,0,0,.35)}
+.page{width:100%;min-height:100vh;padding:12px}
+.topbar{display:grid;grid-template-columns:120px 1fr 280px;align-items:center;background:linear-gradient(90deg,var(--azul-oscuro),var(--azul));color:white;border-radius:10px;overflow:hidden;box-shadow:var(--sombra)}
+.logo{background:white;color:var(--azul);height:100%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:30px}
+.logo span{background:linear-gradient(135deg,var(--azul),var(--celeste));color:white;padding:17px 15px;border-radius:18px;box-shadow:0 8px 18px rgba(0,0,0,.25)}
+.title{padding:20px 24px;text-align:center}.title h1{font-size:30px;margin-bottom:6px}.title p{font-size:13px;opacity:.95}
+.header-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:14px;border-left:1px solid rgba(255,255,255,.35)}
+.header-stats div{font-weight:800;font-size:15px}.header-stats small{display:block;font-size:10px;text-transform:uppercase;opacity:.9}
+.filters{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:12px 0}
+.filter-card{background:var(--tarjeta);border-radius:9px;padding:9px;box-shadow:var(--sombra)}
+.filter-card label{display:block;font-size:10px;font-weight:800;margin-bottom:6px;text-transform:uppercase}
+select,button{width:100%;border:1px solid var(--gris);background:var(--tarjeta);color:var(--texto);border-radius:8px;padding:8px;outline:none}
+button{background:var(--azul-oscuro);color:white;font-weight:700;cursor:pointer;transition:.25s}
+button:hover{background:var(--azul);transform:translateY(-2px)}
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:12px}
+.kpi{background:var(--tarjeta);border-radius:10px;padding:18px 14px;box-shadow:var(--sombra);position:relative;overflow:hidden;min-height:112px;transition:.25s}
+.kpi:hover{transform:translateY(-6px)}.kpi::after{content:"";position:absolute;top:-28px;right:-20px;width:80px;height:80px;background:rgba(30,136,229,.13);border-radius:50%}
+.kpi .icon{font-size:20px;margin-bottom:7px}.kpi h2{color:var(--azul);font-size:24px;margin-bottom:4px}.kpi p{font-size:12px;font-weight:700}
+.kpi small{display:inline-block;margin-top:8px;color:var(--verde);background:rgba(22,163,74,.09);padding:4px 7px;border-radius:12px;font-size:10px;font-weight:700}
+.dashboard-grid{display:grid;grid-template-columns:1.15fr 1.1fr .85fr;gap:12px}
+.card{background:var(--tarjeta);border-radius:10px;box-shadow:var(--sombra);padding:15px;border-top:4px solid var(--azul);min-height:260px}
+.card h3{font-size:15px;margin-bottom:12px;color:var(--texto)}.wide{grid-column:span 2}.small{min-height:210px}canvas{max-height:220px}
+.executive{background:linear-gradient(135deg,#0B3C5D,#143D59);color:white;border-top:none}.executive h3{color:white}.executive ul{padding-left:18px;line-height:1.8;font-size:13px}
+.quality{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.quality div{background:rgba(30,136,229,.08);border-radius:10px;padding:12px;text-align:center}.quality h2{color:var(--rojo);font-size:23px}
+table{width:100%;border-collapse:collapse;font-size:12px;overflow:hidden;border-radius:8px}th{background:var(--azul);color:white;padding:9px;text-align:left}td{padding:9px;border-bottom:1px solid var(--gris)}tr:hover{background:rgba(30,136,229,.08)}
+.badge{padding:5px 8px;border-radius:20px;color:white;font-weight:700;font-size:11px}.finalizada{background:var(--verde)}.confirmada{background:var(--azul)}.cancelada{background:var(--rojo)}
+@media(max-width:1100px){.topbar{grid-template-columns:1fr}.logo{padding:12px}.filters{grid-template-columns:repeat(2,1fr)}.kpi-grid{grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr}.wide{grid-column:span 1}}
+@media(max-width:600px){.filters,.kpi-grid,.quality{grid-template-columns:1fr}.title h1{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="topbar"><div class="logo"><span>BI</span></div><div class="title"><h1>Informe Ejecutivo Hotelero</h1><p>Análisis operativo, rentabilidad, ocupación, cancelaciones y calidad del servicio</p></div><div class="header-stats"><div id="topMeses">12<small>Meses analizados</small></div><div id="topReservas">500<small>Reservas</small></div><div id="topIngresos">$293K<small>Ingresos</small></div><div id="topSatisfaccion">3.99<small>Satisfacción</small></div></div></header>
+<section class="filters">
+<div class="filter-card"><label>Año</label><select id="fAnio"><option value="Todos">Todos</option><option>2025</option></select></div>
+<div class="filter-card"><label>Habitación</label><select id="fHabitacion"><option value="Todos">Todas</option><option>Sencilla</option><option>Doble</option><option>Suite</option><option>Familiar</option></select></div>
+<div class="filter-card"><label>Nacionalidad</label><select id="fNacionalidad"><option value="Todos">Todas</option><option>Hondureña</option><option>Guatemalteca</option><option>Española</option><option>Canadiense</option><option>Mexicana</option><option>Estadounidense</option><option>Nicaragüense</option><option>Costarricense</option><option>Salvadoreña</option><option>Colombiana</option></select></div>
+<div class="filter-card"><label>Canal</label><select id="fCanal"><option value="Todos">Todos</option><option>Web</option><option>Agencia</option><option>Teléfono</option><option>Recepción</option></select></div>
+<div class="filter-card"><label>Pago</label><select id="fPago"><option value="Todos">Todos</option><option>Tarjeta de Crédito</option><option>Transferencia</option><option>Efectivo</option></select></div>
+<div class="filter-card"><label>Estado</label><select id="fEstado"><option value="Todos">Todos</option><option>Finalizada</option><option>Confirmada</option><option>Cancelada</option></select></div>
+<div class="filter-card"><label>Acción</label><button id="btnLimpiar">Limpiar filtros</button></div>
+</section>
+<section class="kpi-grid">
+<div class="kpi"><div class="icon">💰</div><h2 id="kIngresos">$0</h2><p>Ingresos totales</p><small>Según filtros</small></div>
+<div class="kpi"><div class="icon">🛎️</div><h2 id="kReservas">0</h2><p>Total reservas</p><small>Demanda hotelera</small></div>
+<div class="kpi"><div class="icon">❌</div><h2 id="kCancelacion">0%</h2><p>Tasa cancelación</p><small id="kCanceladas">0 reservas</small></div>
+<div class="kpi"><div class="icon">⭐</div><h2 id="kSatisfaccion">0/5</h2><p>Satisfacción</p><small>Promedio filtrado</small></div>
+<div class="kpi"><div class="icon">🏨</div><h2 id="kOcupacion">0%</h2><p>Ocupación promedio</p><small>Estimación</small></div>
+<div class="kpi"><div class="icon">📈</div><h2 id="kPromedio">$0</h2><p>Ingreso promedio</p><small>Por reserva</small></div>
+</section>
+<main class="dashboard-grid">
+<div class="card"><h3>📈 Tendencia de ingresos por mes</h3><canvas id="ingresosMes"></canvas></div>
+<div class="card"><h3>🏨 Top habitaciones por reservas</h3><canvas id="habitaciones"></canvas></div>
+<div class="card"><h3>📊 Estado de reservas</h3><canvas id="estadoReservas"></canvas></div>
+<div class="card"><h3>🌎 Distribución de nacionalidades</h3><canvas id="nacionalidades"></canvas></div>
+<div class="card"><h3>💳 Métodos de pago utilizados</h3><canvas id="pagos"></canvas></div>
+<div class="card"><h3>📞 Canales de reserva</h3><canvas id="canales"></canvas></div>
+<div class="card executive wide"><h3>📌 Lectura ejecutiva</h3><ul id="lecturaEjecutiva"></ul></div>
+<div class="card small"><h3>🧪 Señales de calidad de datos</h3><div class="quality"><div><h2 id="qReg">0</h2><small>Registros</small></div><div><h2 id="qAnom">0</h2><small>Anomalías</small></div><div><h2 id="qCan">0</h2><small>Canceladas</small></div><div><h2 id="qMes">0</h2><small>Meses</small></div></div></div>
+<div class="card"><h3>⭐ Tendencia de satisfacción</h3><canvas id="satisfaccion"></canvas></div>
+<div class="card"><h3>💡 Recomendaciones estratégicas</h3><ul style="padding-left:18px;line-height:1.8;font-size:13px"><li>Crear promociones para temporada baja.</li><li>Impulsar paquetes para habitación doble.</li><li>Reducir cancelaciones con pagos anticipados.</li><li>Potenciar ventas de restaurante, spa y transporte.</li></ul></div>
+<div class="card wide"><h3>📋 Últimas reservas filtradas</h3><table><thead><tr><th>ID</th><th>Mes</th><th>Cliente</th><th>Nacionalidad</th><th>Habitación</th><th>Canal</th><th>Pago</th><th>Ingreso</th><th>Estado</th></tr></thead><tbody id="tablaReservas"></tbody></table></div>
+</main>
+</div>
+<script>
+const reservas=[
+{id:"R0001",anio:"2025",mes:"Ene",cliente:"María López",nacionalidad:"Hondureña",habitacion:"Doble",canal:"Web",pago:"Tarjeta de Crédito",estado:"Finalizada",ingreso:780,satisfaccion:4},
+{id:"R0002",anio:"2025",mes:"Ene",cliente:"Carlos Pérez",nacionalidad:"Guatemalteca",habitacion:"Sencilla",canal:"Recepción",pago:"Efectivo",estado:"Finalizada",ingreso:320,satisfaccion:4},
+{id:"R0003",anio:"2025",mes:"Feb",cliente:"Ana Flores",nacionalidad:"Española",habitacion:"Suite",canal:"Agencia",pago:"Transferencia",estado:"Cancelada",ingreso:0,satisfaccion:null},
+{id:"R0004",anio:"2025",mes:"Feb",cliente:"Luis Gómez",nacionalidad:"Canadiense",habitacion:"Familiar",canal:"Web",pago:"Tarjeta de Crédito",estado:"Confirmada",ingreso:980,satisfaccion:4},
+{id:"R0005",anio:"2025",mes:"Mar",cliente:"Laura Díaz",nacionalidad:"Mexicana",habitacion:"Doble",canal:"Web",pago:"Tarjeta de Crédito",estado:"Finalizada",ingreso:650,satisfaccion:5},
+{id:"R0006",anio:"2025",mes:"Mar",cliente:"Pedro Castro",nacionalidad:"Estadounidense",habitacion:"Suite",canal:"Agencia",pago:"Transferencia",estado:"Finalizada",ingreso:1450,satisfaccion:4},
+{id:"R0007",anio:"2025",mes:"Abr",cliente:"Sofía Ramírez",nacionalidad:"Nicaragüense",habitacion:"Sencilla",canal:"Teléfono",pago:"Efectivo",estado:"Finalizada",ingreso:270,satisfaccion:3},
+{id:"R0008",anio:"2025",mes:"May",cliente:"Daniel Flores",nacionalidad:"Costarricense",habitacion:"Familiar",canal:"Web",pago:"Tarjeta de Crédito",estado:"Finalizada",ingreso:1120,satisfaccion:4},
+{id:"R0009",anio:"2025",mes:"Jun",cliente:"Valeria Cruz",nacionalidad:"Salvadoreña",habitacion:"Doble",canal:"Recepción",pago:"Efectivo",estado:"Confirmada",ingreso:590,satisfaccion:4},
+{id:"R0010",anio:"2025",mes:"Jul",cliente:"Miguel Sánchez",nacionalidad:"Colombiana",habitacion:"Suite",canal:"Web",pago:"Tarjeta de Crédito",estado:"Finalizada",ingreso:1780,satisfaccion:5},
+{id:"R0011",anio:"2025",mes:"Ago",cliente:"Paola Mejía",nacionalidad:"Guatemalteca",habitacion:"Doble",canal:"Web",pago:"Tarjeta de Crédito",estado:"Finalizada",ingreso:1320,satisfaccion:5},
+{id:"R0012",anio:"2025",mes:"Ago",cliente:"Andrea Torres",nacionalidad:"Hondureña",habitacion:"Familiar",canal:"Agencia",pago:"Transferencia",estado:"Finalizada",ingreso:1640,satisfaccion:4},
+{id:"R0013",anio:"2025",mes:"Sep",cliente:"Kevin Castro",nacionalidad:"Española",habitacion:"Sencilla",canal:"Teléfono",pago:"Efectivo",estado:"Cancelada",ingreso:0,satisfaccion:null},
+{id:"R0014",anio:"2025",mes:"Oct",cliente:"José Rodríguez",nacionalidad:"Canadiense",habitacion:"Doble",canal:"Web",pago:"Tarjeta de Crédito",estado:"Finalizada",ingreso:720,satisfaccion:4},
+{id:"R0015",anio:"2025",mes:"Nov",cliente:"Juan Pérez",nacionalidad:"Mexicana",habitacion:"Suite",canal:"Agencia",pago:"Transferencia",estado:"Finalizada",ingreso:1510,satisfaccion:5},
+{id:"R0016",anio:"2025",mes:"Dic",cliente:"Camila Herrera",nacionalidad:"Estadounidense",habitacion:"Familiar",canal:"Web",pago:"Tarjeta de Crédito",estado:"Finalizada",ingreso:1880,satisfaccion:5},
+{id:"R0017",anio:"2025",mes:"Dic",cliente:"Diego Martínez",nacionalidad:"Hondureña",habitacion:"Doble",canal:"Recepción",pago:"Efectivo",estado:"Confirmada",ingreso:840,satisfaccion:4},
+{id:"R0018",anio:"2025",mes:"Jul",cliente:"Fernanda Molina",nacionalidad:"Guatemalteca",habitacion:"Suite",canal:"Web",pago:"Transferencia",estado:"Cancelada",ingreso:0,satisfaccion:null}
+];
+const meses=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];let charts={};
+function money(n){return "$"+Math.round(n).toLocaleString("en-US")}
+function countBy(arr,key){const o={};arr.forEach(x=>o[x[key]]=(o[x[key]]||0)+1);return o}
+function sumByMonth(arr){return meses.map(m=>arr.filter(x=>x.mes===m).reduce((s,x)=>s+x.ingreso,0))}
+function avgSatByMonth(arr){return meses.map(m=>{const v=arr.filter(x=>x.mes===m&&x.satisfaccion);return v.length?+(v.reduce((s,x)=>s+x.satisfaccion,0)/v.length).toFixed(2):0})}
+function getFiltered(){const f={anio:fAnio.value,habitacion:fHabitacion.value,nacionalidad:fNacionalidad.value,canal:fCanal.value,pago:fPago.value,estado:fEstado.value};return reservas.filter(r=>(f.anio==="Todos"||r.anio===f.anio)&&(f.habitacion==="Todos"||r.habitacion===f.habitacion)&&(f.nacionalidad==="Todos"||r.nacionalidad===f.nacionalidad)&&(f.canal==="Todos"||r.canal===f.canal)&&(f.pago==="Todos"||r.pago===f.pago)&&(f.estado==="Todos"||r.estado===f.estado))}
+function drawChart(id,type,labels,values,extra={}){if(charts[id])charts[id].destroy();charts[id]=new Chart(document.getElementById(id),{type:type,data:{labels:labels,datasets:[{data:values,backgroundColor:extra.colors||"#1E88E5",borderColor:extra.border||"#1E88E5",fill:extra.fill||false,tension:.4,borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:type==="pie"||type==="doughnut"}},...(extra.options||{})}})}
+function updateDashboard(){const d=getFiltered();const total=d.length;const ingresos=d.reduce((s,x)=>s+x.ingreso,0);const canceladas=d.filter(x=>x.estado==="Cancelada").length;const satVals=d.filter(x=>x.satisfaccion).map(x=>x.satisfaccion);const sat=satVals.length?satVals.reduce((a,b)=>a+b,0)/satVals.length:0;const promedio=total?ingresos/total:0;const ocupacion=total?Math.min(95,Math.round((d.filter(x=>x.estado!=="Cancelada").length/total)*88)):0;
+kIngresos.textContent=money(ingresos);kReservas.textContent=total;kCancelacion.textContent=total?((canceladas/total)*100).toFixed(1)+"%":"0%";kCanceladas.textContent=canceladas+" reservas";kSatisfaccion.textContent=sat?sat.toFixed(2)+"/5":"0/5";kOcupacion.textContent=ocupacion+"%";kPromedio.textContent=money(promedio);topReservas.innerHTML=total+"<small>Reservas</small>";topIngresos.innerHTML=money(ingresos)+"<small>Ingresos</small>";topSatisfaccion.innerHTML=(sat?sat.toFixed(2):"0")+"<small>Satisfacción</small>";
+const hab=countBy(d,"habitacion"),est=countBy(d,"estado"),pag=countBy(d,"pago"),can=countBy(d,"canal"),nac=countBy(d,"nacionalidad");
+drawChart("ingresosMes","line",meses,sumByMonth(d),{border:"#1E88E5",colors:"rgba(30,136,229,.18)",fill:true,options:{plugins:{legend:{display:false}}}});
+drawChart("habitaciones","bar",Object.keys(hab),Object.values(hab),{colors:["#1E88E5","#90CAF9","#0B3C5D","#06B6D4"],options:{indexAxis:"y",plugins:{legend:{display:false}}}});
+drawChart("estadoReservas","doughnut",Object.keys(est),Object.values(est),{colors:["#16A34A","#1E88E5","#E53935"],options:{cutout:"62%"}});
+drawChart("nacionalidades","bar",Object.keys(nac),Object.values(nac),{colors:"#1E88E5",options:{indexAxis:"y",plugins:{legend:{display:false}}}});
+drawChart("pagos","pie",Object.keys(pag),Object.values(pag),{colors:["#1E88E5","#0B3C5D","#90CAF9"]});
+drawChart("canales","bar",Object.keys(can),Object.values(can),{colors:"#0B3C5D",options:{plugins:{legend:{display:false}}}});
+drawChart("satisfaccion","line",meses,avgSatByMonth(d),{border:"#06B6D4",colors:"rgba(6,182,212,.16)",fill:true,options:{plugins:{legend:{display:false}},scales:{y:{min:0,max:5}}}});
+tablaReservas.innerHTML="";d.slice(-10).reverse().forEach(r=>{tablaReservas.innerHTML+=`<tr><td>${r.id}</td><td>${r.mes}</td><td>${r.cliente}</td><td>${r.nacionalidad}</td><td>${r.habitacion}</td><td>${r.canal}</td><td>${r.pago}</td><td>${money(r.ingreso)}</td><td><span class="badge ${r.estado.toLowerCase()}">${r.estado}</span></td></tr>`});if(d.length===0)tablaReservas.innerHTML=`<tr><td colspan="9">No hay reservas con los filtros seleccionados.</td></tr>`;
+qReg.textContent=total;qAnom.textContent=d.filter(x=>x.ingreso>1500).length;qCan.textContent=canceladas;qMes.textContent=new Set(d.map(x=>x.mes)).size;lecturaEjecutiva.innerHTML=`<li>El filtro actual muestra ${total} reservas y ${money(ingresos)} en ingresos.</li><li>La tasa de cancelación filtrada es ${total?((canceladas/total)*100).toFixed(1):0}%.</li><li>La satisfacción promedio es ${sat?sat.toFixed(2):0}/5.</li><li>Use los filtros superiores para analizar habitación, canal, pago, nacionalidad y estado.</li>`}
+["fAnio","fHabitacion","fNacionalidad","fCanal","fPago","fEstado"].forEach(id=>document.getElementById(id).addEventListener("change",updateDashboard));
+btnLimpiar.addEventListener("click",()=>{["fAnio","fHabitacion","fNacionalidad","fCanal","fPago","fEstado"].forEach(id=>document.getElementById(id).value="Todos");updateDashboard()});
+function toggleDark(){document.body.classList.toggle("dark")}updateDashboard();
+</script>
+</body>
+</html>
